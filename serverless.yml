@@ -1,0 +1,23 @@
+service: Hello-World
+frameworkVersion: "3"
+
+package:
+  exclude: ${file(./serverless/config/package-exclude.yml)}
+  
+provider:
+  iam: ${file(./serverless/config/permissions.yml)}
+  name: aws
+  runtime: python3.9
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  memorySize: 512
+  timeout: 30
+  deploymentBucket:
+    name: ${self:service}-${opt:stage, self:provider.stage}-${self:provider.region}
+  s3:
+    demo:
+      name: ${self:service}-${opt:stage, self:provider.stage}-demo
+
+functions: ${file(./serverless/config/functions.yml)}
+
+resources: ${file(./serverless/config/resources.yml)}
